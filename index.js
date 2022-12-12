@@ -23,7 +23,7 @@ app.post("/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   if (!firstName || !lastName || !email || !password) {
     res.json({
-      message: "all fields required",
+      message: "all field required",
     });
     return;
   }
