@@ -109,10 +109,9 @@ app.get("/api/alltodo", middlewares.authMiddleware, (req, res) => {
     }
   });
 });
-app.post("/api/gettodo", middlewares.authMiddleware, (req, res) => {
-  console.log(req);
-  let id = { _id: req.body };
-  TodoModels.find(id, (error, todo) => {
+app.get("/api/gettodo/:id", middlewares.authMiddleware, (req, res) => {
+  let id = req.params.id;
+  TodoModels.findById(id, (error, todo) => {
     if (error) {
       res.json(error);
     } else {
