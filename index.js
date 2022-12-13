@@ -111,7 +111,7 @@ app.get("/api/alltodo", middlewares.authMiddleware, (req, res) => {
 });
 app.post("/api/gettodo", middlewares.authMiddleware, (req, res) => {
   console.log(req);
-  let id = { _id: "63960ec7e02b1d852f1074df" };
+  let id = { _id: req.body };
   TodoModels.find(id, (error, todo) => {
     if (error) {
       res.json(error);
