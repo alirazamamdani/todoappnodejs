@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 5000;
 const cors = require("cors");
+require("dotenv").config()
 const mongoose = require("mongoose");
 const body = require("body-parser");
 const TodoModels = require("./Models/TodoModels");
@@ -12,8 +13,7 @@ const middlewares = require("./Middleware/middleware");
 
 app.use(cors());
 app.use(express.json());
-const baseURI =
-  "mongodb+srv://admin2:admin12345@cluster1.2qtzrhd.mongodb.net/jawanPakistanBackend";
+const baseURI = process.env.MONGO_URL;
 
 mongoose
   .connect(baseURI)
