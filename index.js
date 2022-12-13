@@ -39,6 +39,7 @@ app.post("/register", async (req, res) => {
     if (error) {
       res.json({
         message: "Something went wrong!!!!",
+        error
       });
     } else {
       if (user) {
