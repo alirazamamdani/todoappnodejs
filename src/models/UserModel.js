@@ -25,4 +25,4 @@ const userShcema = moongoose.Schema({
 
 const userAuthSchema = moongoose.model("User", userShcema);
 
-module.exports = { userAuthSchema };
+module.exports = userAuthSchema;

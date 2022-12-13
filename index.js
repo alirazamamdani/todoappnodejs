@@ -1,19 +1,18 @@
 const express = require("express");
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 require("dotenv").config()
 const mongoose = require("mongoose");
-const body = require("body-parser");
-const TodoModels = require("./Models/TodoModels");
-const { userAuthSchema } = require("./Models/UserModel");
+const TodoModels = require("./src/models/TodoModels");
+const UserModel = require("./src/models/UserModel");
 const bcrypt = require("bcryptjs");
 const jwtToken = require("jsonwebtoken");
-const middlewares = require("./Middleware/middleware");
+const middlewares = require("./src/middleware/middleware");
 
 app.use(cors());
 app.use(express.json());
-const baseURI = process.env.MONGO_URL;
+const baseURI = process.env.MONGO_URL
 
 mongoose
   .connect(baseURI)
@@ -34,7 +33,7 @@ app.post("/register", async (req, res) => {
     email: email,
     password: hashpassword,
   };
-  userAuthSchema.findOne({ email }, (error, user) => {
+  UserModel.findOne({ email }, (error, user) => {
     if (error) {
       res.json({
         message: "Something went wrong!!!!",
@@ -45,7 +44,7 @@ app.post("/register", async (req, res) => {
           message: "User Email Already Exist",
         });
       } else {
-        userAuthSchema.create(signupData, (error, response) => {
+        UserModel.create(signupData, (error, response) => {
           if (error) {
             res.json({
               message: "Something went wrong!!",
@@ -65,7 +64,7 @@ app.post("/register", async (req, res) => {
 });
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  userAuthSchema.findOne({ email }, async (error, data) => {
+  UserModel.findOne({ email }, async (error, data) => {
     if (error) {
       res.json({
         message: "user not exist",
