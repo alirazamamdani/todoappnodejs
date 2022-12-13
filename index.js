@@ -10,7 +10,9 @@ const bcrypt = require("bcryptjs");
 const jwtToken = require("jsonwebtoken");
 const middlewares = require("./src/middleware/middleware");
 
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
 app.use(express.json());
 const baseURI = process.env.MONGO_URL
 
