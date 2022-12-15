@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const cors = require("cors");
-require("dotenv").config()
+require("dotenv").config();
 const mongoose = require("mongoose");
 const TodoModels = require("./src/models/TodoModels");
 const UserModel = require("./src/models/UserModel");
@@ -10,11 +10,13 @@ const bcrypt = require("bcryptjs");
 const jwtToken = require("jsonwebtoken");
 const middlewares = require("./src/middleware/middleware");
 
-app.use(cors({
-  origin: "*"
-}));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
-const baseURI = process.env.MONGO_URL
+const baseURI = process.env.MONGO_URL;
 
 mongoose
   .connect(baseURI)
@@ -38,20 +40,21 @@ app.post("/register", async (req, res) => {
   UserModel.findOne({ email }, (error, user) => {
     if (error) {
       res.json({
-        message: "Something went wrong!!!!",
-        error
+        message: error,
+        isExecuted: false,
       });
     } else {
       if (user) {
         res.json({
           message: "User Email Already Exist",
+          isExecuted: false,
         });
       } else {
         UserModel.create(signupData, (error, response) => {
           if (error) {
             res.json({
-              message: "Something went wrong!!",
-              error,
+              message: error,
+              isExecuted: false,
             });
           } else {
             res.json({
@@ -70,7 +73,8 @@ app.post("/login", async (req, res) => {
   UserModel.findOne({ email }, async (error, data) => {
     if (error) {
       res.json({
-        message: "user not exist",
+        message: error,
+        isExecuted: false,
       });
     } else {
       let hashpassowrdCompare = await bcrypt.compare(password, data.password);
@@ -88,6 +92,7 @@ app.post("/login", async (req, res) => {
       } else {
         res.json({
           message: "Credentials Error",
+          isExecuted: false,
         });
       }
     }
@@ -100,11 +105,15 @@ app.get("/", (req, res) => {
 app.get("/api/alltodo", middlewares.authMiddleware, (req, res) => {
   TodoModels.find({}, (error, data) => {
     if (error) {
-      res.json(error);
+      res.json({
+        message: error,
+        isExecuted: false,
+      });
     } else {
       res.json({
         message: `all get data ${data.length} `,
         data,
+        isExecuted: true,
       });
     }
   });
@@ -113,11 +122,15 @@ app.get("/api/gettodo/:id", middlewares.authMiddleware, (req, res) => {
   let id = req.params.id;
   TodoModels.findById(id, (error, todo) => {
     if (error) {
-      res.json(error);
+      res.json({
+        message: error,
+        isExecuted: false
+      });
     } else {
       res.json({
         message: `Todo Found `,
         todo,
+        isExecuted: true
       });
     }
   });
@@ -128,11 +141,15 @@ app.put("/api/todo/:id", middlewares.authMiddleware, (req, res) => {
   let id = req.params.id;
   TodoModels.findOneAndUpdate(id, data, { new: true }, (error, data) => {
     if (error) {
-      res.json(error);
+      res.json({
+        message: error,
+        isExecuted: false,
+      });
     } else {
       res.json({
         message: "update done",
         data,
+        isExecuted: true,
       });
     }
   });
@@ -142,11 +159,15 @@ app.post("/api/todo", middlewares.authMiddleware, (req, res) => {
   let body = req.body;
   TodoModels.create(body, (error, data) => {
     if (error) {
-      res.json(error);
+      res.json({
+        message: error,
+        isExecuted: false,
+      });
     } else {
       res.send({
         message: "Todo Item add successfully",
         data,
+        isExecuted: true,
       });
     }
   });
@@ -155,11 +176,15 @@ app.delete("/api/todo/:id", middlewares.authMiddleware, (req, res) => {
   let id = req.params.id;
   TodoModels.findByIdAndDelete(id, (error, data) => {
     if (error) {
-      res.json(error);
+      res.json({
+        message: error,
+        isExecuted: false
+      });
     } else {
       res.json({
         message: "Successfully Delete",
         data,
+        isExecuted: true
       });
     }
   });
